@@ -1,0 +1,362 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.dash{padding:1rem 0}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.topbar h1{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.topbar span{font-size:12px;color:var(--color-text-secondary)}
+.tabs{display:flex;gap:4px;margin-bottom:1.25rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:0}
+.tab{font-size:13px;padding:6px 14px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:4px 4px 0 0;transition:color .15s}
+.tab.active{color:var(--color-text-primary);border-bottom-color:#378ADD;font-weight:500}
+.tab:hover:not(.active){color:var(--color-text-primary);background:var(--color-background-secondary)}
+.page{display:none}.page.active{display:block}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.kpi{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px}
+.kpi-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.kpi-val{font-size:22px;font-weight:500;color:var(--color-text-primary);line-height:1}
+.kpi-sub{font-size:11px;margin-top:5px}
+.kpi-good{color:#1D9E75}.kpi-warn{color:#BA7517}.kpi-bad{color:#E24B4A}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.charts-row-3{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:1.25rem}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px}
+.card-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:12px;text-transform:uppercase;letter-spacing:.04em}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.badge-good{background:#EAF3DE;color:#3B6D11}.badge-warn{background:#FAEEDA;color:#854F0B}.badge-bad{background:#FCEBEB;color:#A32D2D}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:6px 8px;font-size:11px;font-weight:500;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.tbl td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--color-background-secondary)}
+.bar-wrap{display:flex;align-items:center;gap:8px}
+.bar-bg{flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.score-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.inv-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.inv-row:last-child{border-bottom:none}
+.section-2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.25rem}
+</style>
+
+<div class="dash">
+  <div class="topbar">
+    <h1><i class="ti ti-chart-bar" aria-hidden="true" style="font-size:16px;margin-right:6px;vertical-align:-2px"></i>Supply Chain Analytics Dashboard</h1>
+    <span>Data: 2022 – 2024 &nbsp;|&nbsp; 1,092 completed orders</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('overview')">Executive overview</div>
+    <div class="tab" onclick="switchTab('supplier')">Supplier performance</div>
+    <div class="tab" onclick="switchTab('leadtime')">Lead time trends</div>
+    <div class="tab" onclick="switchTab('inventory')">Inventory risk</div>
+  </div>
+
+  <!-- PAGE 1: EXECUTIVE OVERVIEW -->
+  <div class="page active" id="page-overview">
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Total orders</div>
+        <div class="kpi-val">1,092</div>
+        <div class="kpi-sub kpi-good">Completed orders</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total spend</div>
+        <div class="kpi-val">$58.8M</div>
+        <div class="kpi-sub kpi-warn">Across 10 suppliers</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">On-time delivery</div>
+        <div class="kpi-val">43.6%</div>
+        <div class="kpi-sub kpi-bad">Target: 90% — critical gap</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Defect rate</div>
+        <div class="kpi-val">2.7%</div>
+        <div class="kpi-sub kpi-warn">Target: &lt;3% — borderline</div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Inventory value</div>
+        <div class="kpi-val">$1.31M</div>
+        <div class="kpi-sub" style="color:var(--color-text-secondary)">50 SKU-locations</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Critical stock items</div>
+        <div class="kpi-val">4</div>
+        <div class="kpi-sub kpi-warn">Need immediate reorder</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Stockout items</div>
+        <div class="kpi-val">0</div>
+        <div class="kpi-sub kpi-good">No stockouts currently</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Active suppliers</div>
+        <div class="kpi-val">10</div>
+        <div class="kpi-sub kpi-bad">2 flagged high risk</div>
+      </div>
+    </div>
+    <div class="charts-row-3">
+      <div class="card">
+        <div class="card-title">Monthly on-time delivery % (2024)</div>
+        <div style="position:relative;height:200px"><canvas id="otdChart" role="img" aria-label="Line chart of monthly on-time delivery percentage across 2024">Monthly OTD ranging from 34% to 57%.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Spend by category</div>
+        <div style="position:relative;height:200px"><canvas id="spendChart" role="img" aria-label="Bar chart showing spend by supply category">Electronics leads at $16M.</canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: SUPPLIER PERFORMANCE -->
+  <div class="page" id="page-supplier">
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kpi"><div class="kpi-label">Best supplier</div><div class="kpi-val" style="font-size:16px">AlphaSteel Corp</div><div class="kpi-sub kpi-good">Score 68.9 — 100% OTD</div></div>
+      <div class="kpi"><div class="kpi-label">Worst supplier</div><div class="kpi-val" style="font-size:16px">PeakSupply Co</div><div class="kpi-sub kpi-bad">Score 7.4 — 7.5% defect rate</div></div>
+      <div class="kpi"><div class="kpi-label">High risk suppliers</div><div class="kpi-val">2</div><div class="kpi-sub kpi-bad">Immediate action needed</div></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-title">Supplier scorecard — all suppliers</div>
+      <table class="tbl">
+        <thead><tr><th>Supplier</th><th>Country</th><th>OTD %</th><th>Defect %</th><th>Score</th><th>Risk</th></tr></thead>
+        <tbody id="supplierTbl"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Composite score ranking</div>
+      <div id="scoreBarChart" style="position:relative;height:260px"><canvas id="scoreChart" role="img" aria-label="Horizontal bar chart of supplier composite scores">Scores range from 7 to 69.</canvas></div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: LEAD TIME TRENDS -->
+  <div class="page" id="page-leadtime">
+    <div class="kpi-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="kpi"><div class="kpi-label">Avg OTD rate</div><div class="kpi-val kpi-bad">43.6%</div><div class="kpi-sub kpi-bad">46.4 pts below target</div></div>
+      <div class="kpi"><div class="kpi-label">Best month (2024)</div><div class="kpi-val">57.1%</div><div class="kpi-sub" style="color:var(--color-text-secondary)">September 2024</div></div>
+      <div class="kpi"><div class="kpi-label">Worst month (2024)</div><div class="kpi-val kpi-bad">34.5%</div><div class="kpi-sub kpi-bad">November 2024</div></div>
+    </div>
+    <div class="card" style="margin-bottom:10px">
+      <div class="card-title">OTD % by month — 2024 with target line</div>
+      <div style="position:relative;height:220px"><canvas id="leadChart" role="img" aria-label="Line chart of OTD percentage by month in 2024 with 90% target line">OTD consistently below 90% target.</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Order volume by month — 2024</div>
+      <div style="position:relative;height:160px"><canvas id="volChart" role="img" aria-label="Bar chart of order volume by month 2024">Volume ranges from 22 to 40 orders per month.</canvas></div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: INVENTORY RISK -->
+  <div class="page" id="page-inventory">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-label">Total inventory value</div><div class="kpi-val">$1.31M</div><div class="kpi-sub" style="color:var(--color-text-secondary)">Across 5 warehouses</div></div>
+      <div class="kpi"><div class="kpi-label">Adequate stock</div><div class="kpi-val kpi-good">32</div><div class="kpi-sub kpi-good">SKU-locations healthy</div></div>
+      <div class="kpi"><div class="kpi-label">Low stock</div><div class="kpi-val kpi-warn">14</div><div class="kpi-sub kpi-warn">Below reorder point</div></div>
+      <div class="kpi"><div class="kpi-label">Critical stock</div><div class="kpi-val kpi-bad">4</div><div class="kpi-sub kpi-bad">Below safety stock</div></div>
+    </div>
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-title">Stock status distribution</div>
+        <div style="position:relative;height:200px"><canvas id="invPieChart" role="img" aria-label="Donut chart of inventory stock status distribution">32 adequate, 14 low, 4 critical.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">At-risk items by warehouse</div>
+        <div id="whRisk"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Critical & low stock items — action required</div>
+      <table class="tbl">
+        <thead><tr><th>Warehouse</th><th>Product</th><th>Category</th><th>Status</th><th>Stock value</th><th>Action</th></tr></thead>
+        <tbody id="invTbl"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+const textColor = isDark ? '#ccc' : '#555';
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const names=['overview','supplier','leadtime','inventory'];
+    t.classList.toggle('active', names[i]===name);
+  });
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.toggle('active', p.id==='page-'+name);
+  });
+}
+
+// ── CHART 1: OTD line ──────────────────────────────────────────
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const otdData=[38.7,47.5,53.8,40.9,38.7,47.2,35.0,52.0,57.1,41.4,34.5,43.5];
+new Chart(document.getElementById('otdChart'),{
+  type:'line',
+  data:{labels:months,datasets:[{
+    label:'OTD %',data:otdData,
+    borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.08)',
+    pointBackgroundColor:'#378ADD',pointRadius:3,tension:0.3,fill:true
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10}},border:{display:false}},
+      y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10},callback:v=>v+'%'},
+         min:0,max:100,border:{display:false}}
+    }
+  }
+});
+
+// ── CHART 2: Spend by category ────────────────────────────────
+new Chart(document.getElementById('spendChart'),{
+  type:'bar',
+  data:{
+    labels:['Electronics','Textiles','Packaging','Raw Mat.','Logistics'],
+    datasets:[{data:[15.96,13.44,13.18,13.00,3.24],
+      backgroundColor:['#378ADD','#1D9E75','#EF9F27','#D4537E','#888780'],
+      borderRadius:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10},callback:v=>'$'+v+'M'},border:{display:false}},
+      y:{grid:{display:false},ticks:{color:textColor,font:{size:10}},border:{display:false}}
+    }
+  }
+});
+
+// ── SUPPLIER TABLE ────────────────────────────────────────────
+const suppliers=[
+  {name:'AlphaSteel Corp',country:'Germany',otd:100,defect:0.35,score:68.95,risk:'LOW RISK'},
+  {name:'CoreMetal GmbH',country:'Germany',otd:100,defect:0.36,score:68.92,risk:'LOW RISK'},
+  {name:'NovaParts Mfg',country:'Vietnam',otd:40.8,defect:1.89,score:40.65,risk:'MEDIUM RISK'},
+  {name:'SwiftPack Industries',country:'China',otd:39.2,defect:1.7,score:40.58,risk:'MEDIUM RISK'},
+  {name:'Titan Components',country:'India',otd:35.5,defect:1.59,score:39.43,risk:'MEDIUM RISK'},
+  {name:'FastTrack Packaging',country:'India',otd:36.5,defect:1.79,score:39.23,risk:'MEDIUM RISK'},
+  {name:'EliteElec Systems',country:'Taiwan',otd:35.8,defect:1.98,score:38.38,risk:'MEDIUM RISK'},
+  {name:'BrightLine Logistics',country:'USA',otd:0.0,defect:1.73,score:24.81,risk:'HIGH RISK'},
+  {name:'GlobalThread Inc',country:'Cambodia',otd:42.2,defect:7.48,score:24.44,risk:'HIGH RISK'},
+  {name:'PeakSupply Co',country:'Bangladesh',otd:0.0,defect:7.52,score:7.44,risk:'HIGH RISK'},
+];
+const tbl=document.getElementById('supplierTbl');
+suppliers.forEach(s=>{
+  const riskClass=s.risk==='LOW RISK'?'badge-good':s.risk==='HIGH RISK'?'badge-bad':'badge-warn';
+  tbl.innerHTML+=`<tr>
+    <td style="font-weight:500">${s.name}</td>
+    <td>${s.country}</td>
+    <td class="${s.otd===100?'kpi-good':s.otd<40?'kpi-bad':'kpi-warn'}">${s.otd}%</td>
+    <td class="${s.defect>5?'kpi-bad':s.defect>2?'kpi-warn':'kpi-good'}">${s.defect}%</td>
+    <td style="font-weight:500">${s.score}</td>
+    <td><span class="badge ${riskClass}">${s.risk}</span></td>
+  </tr>`;
+});
+
+// ── CHART 3: Supplier score bars ──────────────────────────────
+new Chart(document.getElementById('scoreChart'),{
+  type:'bar',
+  data:{
+    labels:suppliers.map(s=>s.name.split(' ')[0]),
+    datasets:[{
+      data:suppliers.map(s=>s.score),
+      backgroundColor:suppliers.map(s=>s.risk==='LOW RISK'?'#1D9E75':s.risk==='HIGH RISK'?'#E24B4A':'#EF9F27'),
+      borderRadius:4
+    }]
+  },
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10}},min:0,max:100,border:{display:false}},
+      y:{grid:{display:false},ticks:{color:textColor,font:{size:10}},border:{display:false}}
+    }
+  }
+});
+
+// ── CHART 4: Lead time OTD with target line ───────────────────
+new Chart(document.getElementById('leadChart'),{
+  type:'line',
+  data:{labels:months,datasets:[
+    {label:'OTD %',data:otdData,borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.06)',
+     pointBackgroundColor:'#378ADD',pointRadius:3,tension:0.3,fill:true},
+    {label:'Target (90%)',data:Array(12).fill(90),borderColor:'#E24B4A',
+     borderDash:[5,4],pointRadius:0,borderWidth:1.5,fill:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10}},border:{display:false}},
+      y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10},callback:v=>v+'%'},
+         min:0,max:100,border:{display:false}}
+    }
+  }
+});
+
+// ── CHART 5: Order volume ─────────────────────────────────────
+const volData=[31,40,39,22,31,36,40,25,35,29,29,23];
+new Chart(document.getElementById('volChart'),{
+  type:'bar',
+  data:{labels:months,datasets:[{data:volData,backgroundColor:'#B5D4F4',borderRadius:3}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:textColor,font:{size:10}},border:{display:false}},
+      y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:10}},border:{display:false}}
+    }
+  }
+});
+
+// ── CHART 6: Inventory donut ──────────────────────────────────
+new Chart(document.getElementById('invPieChart'),{
+  type:'doughnut',
+  data:{
+    labels:['Adequate (32)','Low (14)','Critical (4)'],
+    datasets:[{data:[32,14,4],
+      backgroundColor:['#1D9E75','#EF9F27','#E24B4A'],
+      borderWidth:0,hoverOffset:4}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+    plugins:{legend:{display:true,position:'bottom',
+      labels:{color:textColor,font:{size:11},boxWidth:10,padding:12}}}
+  }
+});
+
+// ── WAREHOUSE RISK BARS ───────────────────────────────────────
+const whData=[{wh:'WH-BLR',at:2,total:10},{wh:'WH-DEL',at:1,total:10},
+              {wh:'WH-HYD',at:1,total:10},{wh:'WH-CHN',at:0,total:10},{wh:'WH-MUM',at:0,total:10}];
+const whEl=document.getElementById('whRisk');
+whData.forEach(w=>{
+  const pct=Math.round(w.at/w.total*100);
+  const col=w.at>=2?'#E24B4A':w.at===1?'#EF9F27':'#1D9E75';
+  whEl.innerHTML+=`<div class="inv-row">
+    <span style="font-size:12px;font-weight:500;color:var(--color-text-primary);width:72px">${w.wh}</span>
+    <div class="bar-wrap" style="flex:1">
+      <div class="bar-bg"><div class="bar-fill" style="width:${Math.max(pct*3,w.at?8:0)}%;background:${col}"></div></div>
+      <span style="font-size:11px;color:var(--color-text-secondary);width:40px;text-align:right">${w.at} at risk</span>
+    </div>
+  </div>`;
+});
+
+// ── INVENTORY TABLE ───────────────────────────────────────────
+const invItems=[
+  {wh:'WH-BLR',prod:'Microchip MX7',cat:'Electronics',status:'Critical',val:'$2,940',action:'ORDER NOW'},
+  {wh:'WH-BLR',prod:'Circuit Board A',cat:'Electronics',status:'Critical',val:'$3,150',action:'ORDER NOW'},
+  {wh:'WH-DEL',prod:'Steel Rod 10mm',cat:'Raw Materials',status:'Critical',val:'$1,750',action:'ORDER NOW'},
+  {wh:'WH-HYD',prod:'Cotton Fabric Roll',cat:'Textiles',status:'Critical',val:'$4,342',action:'ORDER NOW'},
+  {wh:'WH-MUM',prod:'Packaging Box L',cat:'Packaging',status:'Low',val:'$8,500',action:'REORDER SOON'},
+  {wh:'WH-CHN',prod:'Aluminum Sheet',cat:'Raw Materials',status:'Low',val:'$5,500',action:'REORDER SOON'},
+];
+const invTbl=document.getElementById('invTbl');
+invItems.forEach(r=>{
+  const sc=r.status==='Critical'?'badge-bad':'badge-warn';
+  const ac=r.action==='ORDER NOW'?'kpi-bad':'kpi-warn';
+  invTbl.innerHTML+=`<tr>
+    <td>${r.wh}</td>
+    <td style="font-weight:500">${r.prod}</td>
+    <td>${r.cat}</td>
+    <td><span class="badge ${sc}">${r.status}</span></td>
+    <td>${r.val}</td>
+    <td class="${ac}" style="font-weight:500;font-size:11px">${r.action}</td>
+  </tr>`;
+});
+</script>
